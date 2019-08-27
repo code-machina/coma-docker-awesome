@@ -18,12 +18,7 @@ $ docker-compose -f docker-compose-addauth.yml up
 # 설정이 완료되면 Ctrl+C 를 눌러서 빠져나오세요.
 ```
 
-3. 서비스 시작하기
 
 ```bash
  $ docker-compose up -d && docker-compose logs -f
 ```
-
-## 완료
-
-이제 마음껏 사용하세요~

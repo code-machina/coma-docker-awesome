@@ -1,0 +1,55 @@
+version: '3.7'
+
+services:
+  anguis1:
+    image: mongo:4.1
+    hostname: anguis1
+    container_name: anguis1
+    networks:
+      - mongo-bridge
+    ports:
+      - 30001:27017
+    volumes:
+      - ./keyfile:/srv/mongodb
+      - /data/mongo/db-01:/data/db
+    restart: always
+    command: ["mongod", "--replSet", "anguis-repl", "--bind_ip_all", "--ipv6", "--auth", "--keyFile", "/srv/mongodb/mongodb-keyfile"]
+  anguis2:
+    image: mongo:4.1
+    hostname: anguis2
+    container_name: anguis2
+    networks:
+      - mongo-bridge
+    ports:
+      - 30002:27017
+    volumes:
+      - ./keyfile:/srv/mongodb
+      - /data/mongo/db-02:/data/db
+    restart: always
+    command: ["mongod", "--replSet", "anguis-repl", "--bind_ip_all", "--ipv6", "--auth", "--keyFile", "/srv/mongodb/mongodb-keyfile"]
+  anguis3:
+    image: mongo:4.1
+    hostname: anguis3
+    container_name: anguis3
+    networks:
+      - mongo-bridge
+    ports:
+      - 30003:27017
+    volumes:
+      - ./keyfile:/srv/mongodb
+      - /data/mongo/db-03:/data/db
+    restart: always
+    command: ["mongod", "--replSet", "anguis-repl", "--bind_ip_all", "--ipv6", "--auth", "--keyFile", "/srv/mongodb/mongodb-keyfile"]
+  # configure the mongo replica set
+  mongosetup:
+    build: ./mongosetup
+    networks:
+      - mongo-bridge
+    volumes:
+      - ./scripts:/scripts
+      - ./keyfile:/srv/mongodb
+    entrypoint: [ "/scripts/setup.sh" ]
+
+networks:
+  mongo-bridge:
+    name: mongo-bridge
